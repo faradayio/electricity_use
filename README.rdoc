@@ -14,4 +14,4 @@ Description goes here.
 
 == Copyright
 
-Copyright © 2010 Brighter Planet. See LICENSE for details. Contact Brighter Planet for dual-license arrangements.
+Copyright © 2011 Brighter Planet. See LICENSE for details. Contact Brighter Planet for dual-license arrangements.
