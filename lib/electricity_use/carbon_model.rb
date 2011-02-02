@@ -33,11 +33,8 @@ module BrighterPlanet
           # Returns the `emission` estimate in *kg CO<sub>2</sub>e*.
           # This is the user's share of the total electricity generation emissions that occurred during the `timeframe`.
           committee :emission do
-            quorum 'from emission factor and kWh', :needs => [:emission_factor, :kwh] do |characteristics|
-              characteristics[:kwh] * characteristics[:emission_factor]
-            end
-            quorum 'default' do
-              raise "The emission committee's default quorum should never be called."
+            quorum 'from emission factor and energy', :needs => [:emission_factor, :energy] do |characteristics|
+              characteristics[:energy] * characteristics[:emission_factor]
             end
           end
           
@@ -69,11 +66,10 @@ module BrighterPlanet
             end
           end
 
-          ### kWh
+          ### energy
           # Returns the number of kilowatt-hours of electricity used (can be input by client)
-          committee :kwh do
-            #### Default kWh 
-            # Returns the 
+          committee :energy do
+            #### Default energy 
             # Uses the 2008 US American [annual household average](http://www.eia.doe.gov/ask/electricity_faqs.asp#electricity_use_home)
             quorum 'default' do
               11_040

@@ -2,7 +2,7 @@ Feature: Electricity Use Emissions Calculations
   The electricity use model should generate correct emission calculations
 
   Scenario Outline: Calculations from various inputs
-    Given an electricity use has "kwh" of "<kwh>"
+    Given an electricity use has "energy" of "<kwh>"
     And it has "zip_code.name" of "<zip_code>"
     When emissions are calculated
     Then the emission value should be within "0.1" kgs of "<emissions>"

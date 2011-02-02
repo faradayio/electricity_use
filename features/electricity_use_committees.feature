@@ -3,7 +3,7 @@ Feature: Electricity Use Committee Calculations
 
   Scenario: kWh from nothing
     Given an electricity use emitter
-    When the "kwh" committee is calculated
+    When the "energy" committee is calculated
     Then the committee should have used quorum "default"
     And the conclusion of the committee should be "11040"
 

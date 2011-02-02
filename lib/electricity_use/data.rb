@@ -6,7 +6,7 @@ module BrighterPlanet
       def self.included(base)
         base.data_miner do
           schema do
-            float   'kwh'
+            float   'energy'
             string  'state_postal_abbreviation'
             string  'zip_code_name'
           end
