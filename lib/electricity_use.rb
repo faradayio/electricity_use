@@ -1,0 +1,3 @@
+module ElectricityUse
+  # Your code goes here...
+end
