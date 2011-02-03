@@ -68,7 +68,7 @@ module BrighterPlanet
             # **Complies:** GHG Protocol, ISO 14064-1, Climate Registry Protocol
             #
             # Looks up the [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) `eGRID region`.
-            quorum 'from eGRID subregion', :needs => :egrid_subregion, :complies => [:ghg_protocol, :iso, :tcr] do |characteristics|
+            quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
               characteristics[:egrid_subregion].egrid_region
             end
           end
@@ -80,7 +80,7 @@ module BrighterPlanet
             # **Complies:** GHG Protocol, ISO 14064-1, Climate Registry Protocol
             #
             # Looks up the [zip code](http://data.brighterplanet.com/zip_codes) `eGRID subregion`.
-            quorum 'from zip code', :needs => :zip_code, :complies => [:ghg_protocol, :iso, :tcr] do |characteristics|
+            quorum 'from zip code', :needs => :zip_code do |characteristics|
               characteristics[:zip_code].egrid_subregion
             end
             
@@ -88,7 +88,7 @@ module BrighterPlanet
             # **Complies:** GHG Protocol, ISO 14064-1, Climate Registry Protocol
             #
             # Uses an artificial [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) that represents the U.S. average.
-            quorum 'default', :complies => [:ghg_protocol, :iso, :tcr] do
+            quorum 'default' do
               EgridSubregion.find_by_abbreviation 'US'
             end
           end
@@ -115,7 +115,7 @@ module BrighterPlanet
             # **Complies:** GHG Protocol Scope 3, ISO-14064-1, Climate Registry Protocol
             #
             # Assumes the flight occurred on the first day of the `timeframe`.
-            quorum 'from timeframe', :complies => [:ghg_protocol_scope_3, :iso, :tcr] do |characteristics, timeframe|
+            quorum 'from timeframe' do |characteristics, timeframe|
                 timeframe.from
             end
           end
