@@ -33,12 +33,12 @@ module BrighterPlanet
           # Returns the `emission` estimate in *kg CO<sub>2</sub>e*.
           # This is the user's share of the total electricity generation emissions that occurred during the `timeframe`.
           committee :emission do
-            quorum 'from date, emission factor and energy', :needs => [:date, :emission_factor, :energy] do |characteristics, timeframe|
+            quorum 'from date, emission factor, loss factor and energy', :needs => [:date, :emission_factor, :loss_factor, :energy] do |characteristics, timeframe|
               date = characteristics[:date].is_a?(Date) ?
                 characteristics[:date] :
                 Date.parse(characteristics[:date].to_s)
               if timeframe.include? date
-                characteristics[:energy] * characteristics[:emission_factor]
+                characteristics[:energy] / (1 - characteristics[:loss_factor]) * characteristics[:emission_factor]
               else
                 0
               end
@@ -50,6 +50,14 @@ module BrighterPlanet
           committee :emission_factor do # returns kg co2e / kWh
             quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
               characteristics[:egrid_subregion].electricity_emission_factor
+            end
+          end
+          
+          ### electricity loss factor calculation
+          # Returns the emission factor of the electricity source
+          committee :loss_factor do # returns coefficient
+            quorum 'from eGRID region', :needs => :egrid_region do |characteristics|
+              characteristics[:egrid_region].loss_factor
             end
           end
           

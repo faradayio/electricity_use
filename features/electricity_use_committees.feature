@@ -41,6 +41,14 @@ Feature: Electricity Use Committee Calculations
     Then the committee should have used quorum "from eGRID subregion"
     And the conclusion of the committee should have "name" of "W"
 
+  Scenario: Loss factor from eGRID region
+    Given an electricity use emitter
+    When the "egrid_subregion" committee is calculated
+    And the "egrid_region" committee is calculated
+    And the "loss_factor" committee is calculated
+    Then the committee should have used quorum "from eGRID region"
+    And the conclusion of the committee should be "0.2"
+
   Scenario: Emission factor from eGRID subregion
     Given an electricity use emitter
     When the "egrid_subregion" committee is calculated

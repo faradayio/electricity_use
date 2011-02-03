@@ -8,8 +8,8 @@ Feature: Electricity Use Emissions Calculations
     Then the emission value should be within "0.1" kgs of "<emissions>"
     Examples:
       | kwh | zip_code | emissions |
-      |     |          |     22080 |
-      |   1 |    48915 |         2 |
+      |     |          |     27600 |
+      |   1 |    48915 |       2.5 |
       |   0 |    48915 |         0 |
 
   Scenario Outline: Calculations over various timeframes
@@ -20,5 +20,5 @@ Feature: Electricity Use Emissions Calculations
     Examples:
       | date       | emissions |
       | 2010-06-25 |       0.0 |
-      | 2011-06-25 |   22080.0 |
+      | 2011-06-25 |   27600.0 |
       | 2012-06-25 |       0.0 |
