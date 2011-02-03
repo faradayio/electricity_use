@@ -33,8 +33,15 @@ module BrighterPlanet
           # Returns the `emission` estimate in *kg CO<sub>2</sub>e*.
           # This is the user's share of the total electricity generation emissions that occurred during the `timeframe`.
           committee :emission do
-            quorum 'from emission factor and energy', :needs => [:emission_factor, :energy] do |characteristics|
-              characteristics[:energy] * characteristics[:emission_factor]
+            quorum 'from date, emission factor and energy', :needs => [:date, :emission_factor, :energy] do |characteristics, timeframe|
+              date = characteristics[:date].is_a?(Date) ?
+                characteristics[:date] :
+                Date.parse(characteristics[:date].to_s)
+              if timeframe.include? date
+                characteristics[:energy] * characteristics[:emission_factor]
+              else
+                0
+              end
             end
           end
           
@@ -73,6 +80,23 @@ module BrighterPlanet
             # Uses the 2008 US American [annual household average](http://www.eia.doe.gov/ask/electricity_faqs.asp#electricity_use_home)
             quorum 'default' do
               11_040
+            end
+          end
+          
+          ### Date calculation
+          # Returns the `date` on which the flight occurred.
+          committee :date do
+            #### Date from client input
+            # **Complies:** All
+            #
+            # Uses the client-input `date`.
+            
+            #### Date from timeframe
+            # **Complies:** GHG Protocol Scope 3, ISO-14064-1, Climate Registry Protocol
+            #
+            # Assumes the flight occurred on the first day of the `timeframe`.
+            quorum 'from timeframe', :complies => [:ghg_protocol_scope_3, :iso, :tcr] do |characteristics, timeframe|
+                timeframe.from
             end
           end
           

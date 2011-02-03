@@ -11,3 +11,14 @@ Feature: Electricity Use Emissions Calculations
       |     |          |     22080 |
       |   1 |    48915 |         2 |
       |   0 |    48915 |         0 |
+
+  Scenario Outline: Calculations over various timeframes
+    Given an electricity use has "date" of "<date>"
+    And it is the year "2011"
+    When emissions are calculated
+    Then the emission value should be within "0.1" kgs of "<emissions>"
+    Examples:
+      | date       | emissions |
+      | 2010-06-25 |       0.0 |
+      | 2011-06-25 |   22080.0 |
+      | 2012-06-25 |       0.0 |

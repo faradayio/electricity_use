@@ -1,6 +1,12 @@
 Feature: Electricity Use Committee Calculations
   The electricity use model should generate correct committee calculations
 
+  Scenario: Date committee from timeframe
+    Given an electricity use emitter
+    And a characteristic "timeframe" of "2010-07-15/2010-07-20"
+    When the "date" committee is calculated
+    Then the conclusion of the committee should be "2010-07-15"
+
   Scenario: kWh from nothing
     Given an electricity use emitter
     When the "energy" committee is calculated
