@@ -53,6 +53,18 @@ module BrighterPlanet
             end
           end
           
+          ### eGRID region calculation
+          # Returns the lodging's [eGRID region](http://data.brighterplanet.com/egrid_regions).
+          committee :egrid_region do
+            #### eGRID region from eGRID subregion
+            # **Complies:** GHG Protocol, ISO 14064-1, Climate Registry Protocol
+            #
+            # Looks up the [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) `eGRID region`.
+            quorum 'from eGRID subregion', :needs => :egrid_subregion, :complies => [:ghg_protocol, :iso, :tcr] do |characteristics|
+              characteristics[:egrid_subregion].egrid_region
+            end
+          end
+          
           ### eGRID subregion calculation
           # Returns the [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) where electricity was used.
           committee :egrid_subregion do

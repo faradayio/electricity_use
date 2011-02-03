@@ -26,6 +26,21 @@ Feature: Electricity Use Committee Calculations
     Then the committee should have used quorum "from zip code"
     And the conclusion of the committee should have "abbreviation" of "CAMX"
 
+  Scenario: eGRID region from nothing
+    Given an electricity use emitter
+    When the "egrid_subregion" committee is calculated
+    And the "egrid_region" committee is calculated
+    Then the committee should have used quorum "from eGRID subregion"
+    And the conclusion of the committee should have "name" of "US"
+
+  Scenario: eGRID region from zip code
+    Given an electricity use emitter
+    And a characteristic "zip_code.name" of "94122"
+    When the "egrid_subregion" committee is calculated
+    And the "egrid_region" committee is calculated
+    Then the committee should have used quorum "from eGRID subregion"
+    And the conclusion of the committee should have "name" of "W"
+
   Scenario: Emission factor from eGRID subregion
     Given an electricity use emitter
     When the "egrid_subregion" committee is calculated
