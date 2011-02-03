@@ -7,7 +7,7 @@ Feature: Electricity Use Committee Calculations
     When the "date" committee is calculated
     Then the conclusion of the committee should be "2010-07-15"
 
-  Scenario: kWh from nothing
+  Scenario: Energy from nothing
     Given an electricity use emitter
     When the "energy" committee is calculated
     Then the committee should have used quorum "default"
