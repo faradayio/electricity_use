@@ -8,7 +8,6 @@ module BrighterPlanet
           schema do
             date    'date'
             float   'energy'
-            string  'state_postal_abbreviation'
             string  'zip_code_name'
           end
           

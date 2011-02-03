@@ -8,7 +8,6 @@ module BrighterPlanet
         base.characterize do
           has :date
           has :energy
-          has :state
           has :zip_code
         end
       end
