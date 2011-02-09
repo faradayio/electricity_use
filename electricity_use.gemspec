@@ -3,7 +3,7 @@ require 'electricity_use/version'
 
 Gem::Specification.new do |s|
   s.name = 'electricity_use'
-  s.version = ElectricityUse::VERSION
+  s.version = BrighterPlanet::ElectricityUse::VERSION
   s.platform = Gem::Platform::RUBY
   s.date = '2011-02-02'
   s.authors = ['Derek Kastner']
