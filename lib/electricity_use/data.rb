@@ -4,14 +4,10 @@ module BrighterPlanet
   module ElectricityUse
     module Data
       def self.included(base)
-        base.data_miner do
-          schema do
-            date    'date'
-            float   'energy'
-            string  'zip_code_name'
-          end
-          
-          process :run_data_miner_on_belongs_to_associations
+        base.create_table do
+          date    'date'
+          float   'energy'
+          string  'zip_code_name'
         end
       end
     end

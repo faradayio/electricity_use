@@ -25,8 +25,6 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.add_development_dependency 'bundler'
-  s.add_development_dependency 'sniff'
-  s.add_dependency 'emitter'
+  s.add_runtime_dependency 'emitter' unless ENV['LOCAL_EMITTER']
+  s.add_development_dependency 'sniff' unless ENV['LOCAL_SNIFF']
 end
-
