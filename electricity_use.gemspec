@@ -6,19 +6,16 @@ Gem::Specification.new do |s|
   s.version = BrighterPlanet::ElectricityUse::VERSION
   s.platform = Gem::Platform::RUBY
   s.date = '2011-02-02'
-  s.authors = ['Derek Kastner']
+  s.authors = ['Derek Kastner', 'Ian Hough', 'Seamus Abshere', 'Andy Rossmeissl']
   s.email = 'dkastner@gmail.com'
-  s.homepage = 'http://github.com/dkastner/electricity_use'
-  s.summary = %Q{TODO: one-line summary of your gem}
-  s.description = %Q{TODO: detailed description of your gem}
+  s.homepage = 'https://github.com/brighterplanet/electricity_use'
+  s.summary = %Q{A software model in Ruby for the greenhouse gas emissions of electricity usage}
+  s.description = %Q{A software model in Ruby for the greenhouse gas emissions of electricity usage}
   s.extra_rdoc_files = [
     'LICENSE',
+    'LICENSE-PREAMBLE',
     'README.rdoc',
   ]
-
-  s.required_rubygems_version = Gem::Requirement.new('>= 1.3.7')
-  s.rubygems_version = '1.3.7'
-  s.specification_version = 3
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
