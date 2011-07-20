@@ -2,7 +2,7 @@ module BrighterPlanet
   module ElectricityUse
     module Data
       def self.included(base)
-        base.create_table do
+        base.force_schema do
           date    'date'
           float   'energy'
           string  'zip_code_name'
