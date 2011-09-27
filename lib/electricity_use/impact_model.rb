@@ -26,13 +26,13 @@ require 'builder'
 # Contributions to this carbon model are actively encouraged and warmly welcomed. This library includes a comprehensive test suite to ensure that your changes do not cause regressions. All changes should include test coverage for new functionality. Please see [sniff](https://github.com/brighterplanet/sniff#readme), our emitter testing framework, for more information.
 module BrighterPlanet
   module ElectricityUse
-    module CarbonModel
+    module ImpactModel
       def self.included(base)
-        base.decide :emission, :with => :characteristics do
+        base.decide :impact, :with => :characteristics do
           ### Emission calculation
           # Returns the `emission` estimate (*kg CO<sub>2</sub>e*).
           # This is the emission produced by generating the electricity used during the `timeframe`, including transmission and distribution losses.
-          committee :emission do
+          committee :carbon do
             #### Emission from date, emission factor, loss factor, and energy
             quorum 'from date, emission factor, loss factor and energy', :needs => [:date, :emission_factor, :loss_factor, :energy] do |characteristics, timeframe|
               date = characteristics[:date].is_a?(Date) ?
@@ -52,7 +52,7 @@ module BrighterPlanet
           
           ### Emission factor calculation
           # Returns the grid average emission factor of the area where the electricity was used (*kg CO<sub>2</sub> / kWh*).
-          committee :emission_factor do
+          committee :carbon_factor do
             #### Emission factor from eGRID subregion
             quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
               # Looks up the emission factor of the `eGRID subregion`.
