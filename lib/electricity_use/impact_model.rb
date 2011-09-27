@@ -52,7 +52,7 @@ module BrighterPlanet
           
           ### Emission factor calculation
           # Returns the grid average emission factor of the area where the electricity was used (*kg CO<sub>2</sub> / kWh*).
-          committee :carbon_factor do
+          committee :emission_factor do
             #### Emission factor from eGRID subregion
             quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
               # Looks up the emission factor of the `eGRID subregion`.
