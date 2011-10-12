@@ -10,10 +10,14 @@ Feature: Electricity Use Committee Calculations
     Then the conclusion of the committee should be "2010-07-15"
 
   Scenario: Energy from nothing
-    Given the conclusion of the committee should be "11040"
+    When the "energy" committee reports
+    Then the committee should have used quorum "default"
+    And the conclusion of the committee should be "11040"
 
   Scenario: eGRID subregion from nothing
-    Given the conclusion of the committee should have "abbreviation" of "US"
+    When the "egrid_subregion" committee reports
+    Then the committee should have used quorum "default"
+    And the conclusion of the committee should have "abbreviation" of "US"
 
   Scenario: eGRID subregion from zip code
     Given a characteristic "zip_code.name" of "94122"
@@ -22,7 +26,8 @@ Feature: Electricity Use Committee Calculations
     And the conclusion of the committee should have "abbreviation" of "CAMX"
 
   Scenario: eGRID region from nothing
-    Given the "egrid_region" committee reports
+    When the "egrid_subregion" committee reports
+    And the "egrid_region" committee reports
     Then the committee should have used quorum "from eGRID subregion"
     And the conclusion of the committee should have "name" of "US"
 
@@ -34,12 +39,14 @@ Feature: Electricity Use Committee Calculations
     And the conclusion of the committee should have "name" of "W"
 
   Scenario: Loss factor from eGRID region
-    Given the "egrid_region" committee reports
+    When the "egrid_subregion" committee reports
+    And the "egrid_region" committee reports
     And the "loss_factor" committee reports
     Then the committee should have used quorum "from eGRID region"
     And the conclusion of the committee should be "0.2"
 
   Scenario: Emission factor from eGRID subregion
-    Given the "emission_factor" committee reports
+    When the "egrid_subregion" committee reports
+    And the "emission_factor" committee reports
     Then the committee should have used quorum "from eGRID subregion"
     And the conclusion of the committee should be "2.0"
