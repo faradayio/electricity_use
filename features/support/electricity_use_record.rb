@@ -4,6 +4,6 @@ require 'electricity_use'
 require 'sniff'
 
 class ElectricityUseRecord < ActiveRecord::Base
-  include Sniff::Emitter
+  include BrighterPlanet::Emitter
   include BrighterPlanet::ElectricityUse
 end
