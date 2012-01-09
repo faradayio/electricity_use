@@ -16,12 +16,13 @@ Gem::Specification.new do |s|
     'LICENSE-PREAMBLE',
     'README.rdoc',
   ]
-
+  
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
-
-  s.add_runtime_dependency 'emitter', '~>0.11.0'
-  s.add_development_dependency 'sniff', '~>0.11.3'
+  
+  s.add_runtime_dependency 'emitter',   '~>0.11.0'
+  s.add_runtime_dependency 'earth',     '~>0.11.1'
+  s.add_development_dependency 'sniff', '~>0.11.4'
 end

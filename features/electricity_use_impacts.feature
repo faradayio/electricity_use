@@ -11,9 +11,9 @@ Feature: Electricity Use Emissions Calculations
     Then the amount of "carbon" should be within "0.1" of "<emissions>"
     Examples:
       | kwh | zip_code | emissions |
-      |     |          |     27600 |
-      |   1 |    48915 |       2.5 |
-      |   0 |    48915 |         0 |
+      |     |          |    8785.1 |
+      |   1 |    94122 |       1.1 |
+      |   0 |    94122 |         0 |
 
   Scenario Outline: Calculations over various timeframes
     Given it has "date" of "<date>"
@@ -23,5 +23,5 @@ Feature: Electricity Use Emissions Calculations
     Examples:
       | date       | emissions |
       | 2010-06-25 |       0.0 |
-      | 2011-06-25 |   27600.0 |
+      | 2011-06-25 |    8785.1 |
       | 2012-06-25 |       0.0 |

@@ -17,7 +17,7 @@ Feature: Electricity Use Committee Calculations
   Scenario: eGRID subregion from nothing
     When the "egrid_subregion" committee reports
     Then the committee should have used quorum "default"
-    And the conclusion of the committee should have "abbreviation" of "US"
+    And the conclusion of the committee should have "name" of "fallback"
 
   Scenario: eGRID subregion from zip code
     Given a characteristic "zip_code.name" of "94122"
@@ -25,28 +25,14 @@ Feature: Electricity Use Committee Calculations
     Then the committee should have used quorum "from zip code"
     And the conclusion of the committee should have "abbreviation" of "CAMX"
 
-  Scenario: eGRID region from nothing
+  Scenario: Loss factor from default eGRID subregion
     When the "egrid_subregion" committee reports
-    And the "egrid_region" committee reports
-    Then the committee should have used quorum "from eGRID subregion"
-    And the conclusion of the committee should have "name" of "US"
-
-  Scenario: eGRID region from zip code
-    Given a characteristic "zip_code.name" of "94122"
-    When the "egrid_subregion" committee reports
-    And the "egrid_region" committee reports
-    Then the committee should have used quorum "from eGRID subregion"
-    And the conclusion of the committee should have "name" of "W"
-
-  Scenario: Loss factor from eGRID region
-    When the "egrid_subregion" committee reports
-    And the "egrid_region" committee reports
     And the "loss_factor" committee reports
-    Then the committee should have used quorum "from eGRID region"
-    And the conclusion of the committee should be "0.2"
+    Then the committee should have used quorum "from eGRID subregion"
+    And the conclusion of the committee should be "0.0575"
 
-  Scenario: Emission factor from eGRID subregion
+  Scenario: Emission factor from default eGRID subregion
     When the "egrid_subregion" committee reports
     And the "emission_factor" committee reports
     Then the committee should have used quorum "from eGRID subregion"
-    And the conclusion of the committee should be "2.0"
+    And the conclusion of the committee should be "0.75"

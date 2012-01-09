@@ -63,20 +63,10 @@ module BrighterPlanet
           ### Loss factor calculation
           # Returns the average transmission and distribution loss factor for the area where the electricity was used.
           committee :loss_factor do
-            #### Loss factor from eGRID region
-            quorum 'from eGRID region', :needs => :egrid_region do |characteristics|
-              # Looks up the loss factor of the `eGRID region`.
-              characteristics[:egrid_region].loss_factor
-            end
-          end
-          
-          ### eGRID region calculation
-          # Returns the [eGRID region](http://data.brighterplanet.com/egrid_regions) where the electricity was used.
-          committee :egrid_region do
-            #### eGRID region from eGRID subregion
+            #### Loss factor from eGRID subregion
             quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
-              # Looks up the [eGRID region](http://data.brighterplanet.com/egrid_regions) in which the `eGRID subregion` is located.
-              characteristics[:egrid_subregion].egrid_region
+              # Looks up the loss factor of the `eGRID subregion` [eGRID region](http://data.brighterplanet.com/egrid_regions).
+              characteristics[:egrid_subregion].egrid_region.loss_factor
             end
           end
           
@@ -92,7 +82,7 @@ module BrighterPlanet
             ##### eGRID subregion from default
             quorum 'default' do
               # Uses the average of all [eGRID subregion](http://data.brighterplanet.com/egrid_subregions), weighted by electricity generation.
-              EgridSubregion.find_by_abbreviation 'US'
+              EgridSubregion.fallback
             end
           end
           

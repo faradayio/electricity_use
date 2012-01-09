@@ -1,3 +1,3 @@
-abbreviation,egrid_region_name,electricity_emission_factor
-CAMX,W,1.0
-US,US,2.0
+abbreviation,egrid_region_name,net_generation,electricity_emission_factor
+CAMX,W,1000,1.0
+NEWE,E,1000,0.5
