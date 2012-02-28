@@ -12,7 +12,7 @@ Feature: Electricity Use Committee Calculations
   Scenario: Energy from nothing
     When the "energy" committee reports
     Then the committee should have used quorum "default"
-    And the conclusion of the committee should be "11040"
+    And the conclusion of the committee should be "39744"
 
   Scenario: eGRID subregion from nothing
     When the "egrid_subregion" committee reports

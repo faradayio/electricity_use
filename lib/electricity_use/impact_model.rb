@@ -40,9 +40,9 @@ module BrighterPlanet
                 Date.parse(characteristics[:date].to_s)
               # - Checks whether the electricity was used during the `timeframe`
               if timeframe.include? date
-                # - Divides `energy` (*kWh*) by (1 - `loss factor`) to give total electricity used, including transmission and distribution losses (*kWh*)
+                # - Converts `energy` (*MJ*) to *kWh* and divides by (1 - `loss factor`) to give total electricity used, including transmission and distribution losses (*kWh*)
                 # - Multiplies by `emission factor` (*kg CO<sub>2</sub>e / kWh*) to give emission (*kg CO<sub>2</sub>e*)
-                characteristics[:energy] / (1 - characteristics[:loss_factor]) * characteristics[:emission_factor]
+                characteristics[:energy].megajoules.to(:kilowatt_hours) / (1 - characteristics[:loss_factor]) * characteristics[:emission_factor]
               else
                 # - If the electricity was not used during the `timeframe`, `emission` is zero
                 0
@@ -87,15 +87,15 @@ module BrighterPlanet
           end
           
           ### Energy calculation
-          # Returns the electricity used (*kWh*).
+          # Returns the electricity used (*MJ*).
           committee :energy do
             #### Energy use from client input
-            # Uses the client-input `energy` (*kWh*).
+            # Uses the client-input `energy` (*MJ*).
             
             #### Energy from default
             quorum 'default' do
-              # Uses the 2008 U.S. [annual household average electricity use](http://www.eia.doe.gov/ask/electricity_faqs.asp#electricity_use_home) (*kWh*).
-              11_040
+              # Uses the 2008 U.S. [annual household average electricity use](http://www.eia.doe.gov/ask/electricity_faqs.asp#electricity_use_home) (*MJ*).
+              11_040.kilowatt_hours.to(:megajoules)
             end
           end
           

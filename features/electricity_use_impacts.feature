@@ -5,15 +5,15 @@ Feature: Electricity Use Emissions Calculations
     Given a electricity_use
 
   Scenario Outline: Calculations from various inputs
-    Given it has "energy" of "<kwh>"
+    Given it has "energy" of "<mj>"
     And it has "zip_code.name" of "<zip_code>"
     When impacts are calculated
     Then the amount of "carbon" should be within "0.1" of "<emissions>"
     Examples:
-      | kwh | zip_code | emissions |
+      |  mj | zip_code | emissions |
       |     |          |    8785.1 |
-      |   1 |    94122 |       1.1 |
-      |   0 |    94122 |         0 |
+      |   0 |    94122 |       0.0 |
+      | 360 |    94122 |     111.1 |
 
   Scenario Outline: Calculations over various timeframes
     Given it has "date" of "<date>"
