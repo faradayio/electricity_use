@@ -42,7 +42,7 @@ module BrighterPlanet
               if timeframe.include? date
                 # - Converts `energy` (*MJ*) to *kWh* and divides by (1 - `loss factor`) to give total electricity used, including transmission and distribution losses (*kWh*)
                 # - Multiplies by `emission factor` (*kg CO<sub>2</sub>e / kWh*) to give emission (*kg CO<sub>2</sub>e*)
-                characteristics[:energy].megajoules.to(:kilowatt_hours) / (1 - characteristics[:loss_factor]) * characteristics[:emission_factor]
+                characteristics[:energy].value.megajoules.to(:kilowatt_hours) / (1 - characteristics[:loss_factor]) * characteristics[:emission_factor]
               else
                 # - If the electricity was not used during the `timeframe`, `emission` is zero
                 0
