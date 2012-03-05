@@ -1,126 +1,164 @@
 # Copyright © 2010 Brighter Planet.
 # See LICENSE for details.
 # Contact Brighter Planet for dual-license arrangements.
-require 'leap'
-require 'timeframe'
-require 'date'
-require 'weighted_average'
-require 'builder'
 
-## ElectricityUse carbon model
-# This model is used by [Brighter Planet](http://brighterplanet.com)'s carbon emission [web service](http://carbon.brighterplanet.com) to estimate the **greenhouse gas emissions of electricity use**.
+## Electricity use model
+# This model is used by the [Brighter Planet](http://brighterplanet.com) [CM1 web service](http://impact.brighterplanet.com) to calculate the impacts of electricity consumption, such as energy use, greenhouse gas emissions, and water use.
+
+##### Timeframe
+# The model calculates impacts that occured during a particular time period (`timeframe`).
+# For example if the `timeframe` is February 2010, an electricity use that occurred (`date`) on February 15, 2010 will have impacts, but an electricity use that occurred on January 31, 2010 will have zero impacts.
 #
-##### Timeframe and date
-# The model estimates the emissions that occur during a particular `timeframe`. To do this it needs to know the `date` on which the electricity use occurred. For example, if the `timeframe` is January 2010, a electricity use that occurred on January 5, 2010 will have emissions but a electricity use that occurred on February 1, 2010 will not.
-#
+# The default `timeframe` is the current calendar year.
+
 ##### Calculations
-# The final estimate is the result of the **calculations** detailed below. These calculations are performed in reverse order, starting with the last calculation listed and finishing with the `emission` calculation. Each calculation is named according to the value it returns.
+# The final impacts are the result of the calculations below. These are performed in reverse order, starting with the last calculation listed and finishing with the greenhouse gas emissions calculation.
 #
-##### Methods
-# To accomodate varying client input, each calculation may have one or more **methods**. These are listed under each calculation in order from most to least preferred. Each method is named according to the values it requires. If any of these values is not available the method will be ignored. If all the methods for a calculation are ignored, the calculation will not return a value. "Default" methods do not require any values, and so a calculation with a default method will always return a value.
+# Each calculation listing shows:
 #
+# * value returned (*units of measurement*)
+# * description of the value
+# * calculation methods, listed from most to least preferred
+#
+# Some methods use `values` returned by prior calculations. If any of these `values` are unknown the method is skipped.
+# If all the methods for a calculation are skipped, the value the calculation would return is unknown.
+
 ##### Standard compliance
-# Each method lists any established calculation standards with which it **complies**. When compliance with a standard is requested, all methods that do not comply with that standard are ignored. This means that any values a particular method requires will have been calculated using a compliant method, because those are the only methods available. If any value did not have a compliant method in its calculation then it would be undefined, and the current method would have been ignored.
+# When compliance with a particular standard is requested, all methods that do not comply with that standard are ignored.
+# Thus any `values` a method needs will have been calculated using a compliant method or will be unknown.
+# To see which standards a method complies with, look at the `:complies =>` section of the code in the right column.
 #
+# Client input complies with all standards.
+
 ##### Collaboration
-# Contributions to this carbon model are actively encouraged and warmly welcomed. This library includes a comprehensive test suite to ensure that your changes do not cause regressions. All changes should include test coverage for new functionality. Please see [sniff](https://github.com/brighterplanet/sniff#readme), our emitter testing framework, for more information.
+# Contributions to this impact model are actively encouraged and warmly welcomed. This library includes a comprehensive test suite to ensure that your changes do not cause regressions. All changes should include test coverage for new functionality. Please see [sniff](https://github.com/brighterplanet/sniff#readme), our emitter testing framework, for more information.
 module BrighterPlanet
   module ElectricityUse
     module ImpactModel
       def self.included(base)
         base.decide :impact, :with => :characteristics do
-          ### Emission calculation
-          # Returns the `emission` estimate (*kg CO<sub>2</sub>e*).
-          # This is the emission produced by generating the electricity used during the `timeframe`, including transmission and distribution losses.
+          # * * *
+          
+          #### Carbon (*kg CO<sub>2</sub>e*)
+          # *The electricity use's total anthropogenic greenhouse gas emissions during `timeframe`.*
           committee :carbon do
-            #### Emission from date, emission factor, loss factor, and energy
+            # If `date` is in `timeframe`, convert `energy` (*MJ*) to *kWh* and divide by (1 - `loss factor`) to give total electricity use including transmission and distribution losses (*kWh*).
+            # Multiply by `emission factor` (*kg CO<sub>2</sub>e / kWh*) to give *kg CO<sub>2</sub>e*.
             quorum 'from date, emission factor, loss factor and energy', :needs => [:date, :emission_factor, :loss_factor, :energy] do |characteristics, timeframe|
-              date = characteristics[:date].is_a?(Date) ?
-                characteristics[:date] :
-                Date.parse(characteristics[:date].to_s)
-              # - Checks whether the electricity was used during the `timeframe`
+              date = characteristics[:date].is_a?(Date) ? characteristics[:date] : Date.parse(characteristics[:date].to_s)
               if timeframe.include? date
-                # - Converts `energy` (*MJ*) to *kWh* and divides by (1 - `loss factor`) to give total electricity used, including transmission and distribution losses (*kWh*)
-                # - Multiplies by `emission factor` (*kg CO<sub>2</sub>e / kWh*) to give emission (*kg CO<sub>2</sub>e*)
                 characteristics[:energy].value.megajoules.to(:kilowatt_hours) / (1 - characteristics[:loss_factor]) * characteristics[:emission_factor]
               else
-                # - If the electricity was not used during the `timeframe`, `emission` is zero
                 0
               end
             end
           end
           
-          ### Emission factor calculation
-          # Returns the grid average emission factor of the area where the electricity was used (*kg CO<sub>2</sub> / kWh*).
+          #### Emission factor (*kg CO<sub>2</sub>e / kWh*)
+          # *The average electricity emission factor of the area where the electricity was used.*
           committee :emission_factor do
-            #### Emission factor from eGRID subregion
+            # Look up the `egrid subregion` electricity emission factor (*kg CO<sub>2</sub>e / kWh*).
             quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
-              # Looks up the emission factor of the `eGRID subregion`.
               characteristics[:egrid_subregion].electricity_emission_factor
             end
+            
+            # Otherwise look up the `state` electricity emission factor (*kg CO<sub>2</sub>e / kWh*).
+            quorum 'from state', :needs => :state do |characteristics|
+              characteristics[:state].electricity_emission_factor
+            end
+            
+            # Otherwise look up the `country` electricity emission factor (*kg CO<sub>2</sub>e / kWh*).
+            quorum 'from country', :needs => :country do |characteristics|
+              characteristics[:country].electricity_emission_factor
+            end
+            
+            # Otherwise use the global average electricity emission factor (*kg CO<sub>2</sub>e / kWh*).
+            quorum 'default' do
+              Country.fallback.electricity_emission_factor
+            end
           end
           
-          ### Loss factor calculation
-          # Returns the average transmission and distribution loss factor for the area where the electricity was used.
+          #### Loss factor
+          # *The average transmission and distribution loss factor for the area where the electricity was used.*
           committee :loss_factor do
-            #### Loss factor from eGRID subregion
+            # Look up the loss factor for the `egrid subregion` eGRID region.
             quorum 'from eGRID subregion', :needs => :egrid_subregion do |characteristics|
-              # Looks up the loss factor of the `eGRID subregion` [eGRID region](http://data.brighterplanet.com/egrid_regions).
               characteristics[:egrid_subregion].egrid_region.loss_factor
             end
+            
+            # Otherwise look up the `state` electricity loss factor.
+            quorum 'from state', :needs => :state do |characteristics|
+              characteristics[:state].electricity_loss_factor
+            end
+            
+            # Otherwise look up the `country` electricity loss factor.
+            quorum 'from country', :needs => :country do |characteristics|
+              characteristics[:country].electricity_loss_factor
+            end
+            
+            # Otherwise use the global average electricity loss factor.
+            quorum 'default' do
+              Country.fallback.electricity_loss_factor
+            end
           end
           
-          ### eGRID subregion calculation
-          # Returns the [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) where the electricity was used.
+          #### Energy (*MJ*)
+          # *The energy content of the electricity used.*
+          committee :energy do
+            # Use client input, if available.
+            
+            # Otherwise convert the 2010 U.S. [average annual household electricity use](http://www.eia.gov/tools/faqs/faq.cfm?id=97&t=3) from *kWh* to *MJ*.
+            quorum 'default' do
+              11_496.kilowatt_hours.to(:megajoules)
+            end
+          end
+          
+          #### Country
+          # *The [country](http://data.brighterplanet.com/countries) where the electricity was used.*
+          committee :country do
+            # Use client input, if available.
+            
+            # Otherwise if we know `state` then country must be the United States.
+            quorum 'from state', :needs => :state, do
+              Country.united_states
+            end
+          end
+          
+          #### eGRID subregion
+          # *The [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) where the electricity was used.*
           committee :egrid_subregion do
-            #### eGRID subregion from zip code
+            # Look up the `zip code` eGRID subregion.
             quorum 'from zip code', :needs => :zip_code do |characteristics|
-              # Looks up the [eGRID subregion](http://data.brighterplanet.com/egrid_subregions) in which the `zip code` is located.
               characteristics[:zip_code].egrid_subregion
             end
+          end
+          
+          #### State
+          # *The [US state](http://data.brighterplanet.com/states) where the electricity was used.*
+          committee :state do
+            # Use client input, if available.
             
-            ##### eGRID subregion from default
-            quorum 'default' do
-              # Uses the average of all [eGRID subregion](http://data.brighterplanet.com/egrid_subregions), weighted by electricity generation.
-              EgridSubregion.fallback
+            # Otherwise look up the `zip code` state.
+            quorum 'from zip code', :needs => :zip_code do |characteristics|
+              characteristics[:zip_code].state
             end
           end
           
-          ### Energy calculation
-          # Returns the electricity used (*MJ*).
-          committee :energy do
-            #### Energy use from client input
-            # Uses the client-input `energy` (*MJ*).
-            
-            #### Energy from default
-            quorum 'default' do
-              # Uses the 2008 U.S. [annual household average electricity use](http://www.eia.doe.gov/ask/electricity_faqs.asp#electricity_use_home) (*MJ*).
-              11_040.kilowatt_hours.to(:megajoules)
-            end
-          end
+          #### Zip code
+          # *The [US zip code](http://data.brighterplanet.com/zip_codes) where the electricity was used.*
+          #
+          # Use client input, if available.
           
-          ### Date calculation
-          # Returns the `date` on which the electricity was used.
+          #### Date (*date*)
+          # *The day the electricity use occurred.*
           committee :date do
-            #### Date from client input
-            # Uses the client-input `date`.
+            # Use client input, if available.
             
-            #### Date from timeframe
+            # Otherwise use the first day of `timeframe`.
             quorum 'from timeframe' do |characteristics, timeframe|
-                # Assumes the electricity was used on the first day of the `timeframe`.
                 timeframe.from
             end
           end
-          
-          ### Zip code calculation
-          # Returns the [zip code](http://data.brighterplanet.com/zip_codes) where the electricity was used.
-            #### Zip code from client input
-            # Uses the client-input [zip code](http://data.brighterplanet.com/zip_codes).
-          
-          ### Timeframe calculation
-          # Returns the `timeframe` during which to calculate emissions.
-            #### Timeframe from client input
-            # Uses the client-input `timeframe`.
         end
       end
     end

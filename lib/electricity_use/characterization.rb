@@ -6,6 +6,8 @@ module BrighterPlanet
           has :date
           has :energy, :measures => Measurement::ElectricalEnergy
           has :zip_code
+          has :state
+          has :country
         end
       end
     end

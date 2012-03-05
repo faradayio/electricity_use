@@ -1,3 +1,2 @@
-abbreviation,egrid_region_name,net_generation,electricity_emission_factor
-CAMX,W,1000,1.0
-NEWE,E,1000,0.5
+abbreviation,name,egrid_region_name,net_generation,electricity_emission_factor
+CAMX,WECC California,W,500,0.31
