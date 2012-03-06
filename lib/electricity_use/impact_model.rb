@@ -119,7 +119,7 @@ module BrighterPlanet
             # Use client input, if available.
             
             # Otherwise if we know `state` then country must be the United States.
-            quorum 'from state', :needs => :state, do
+            quorum 'from state', :needs => :state do
               Country.united_states
             end
           end
