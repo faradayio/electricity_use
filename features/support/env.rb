@@ -2,10 +2,13 @@ require 'bundler'
 Bundler.setup
 
 require 'cucumber'
-require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
-
-require 'data_miner'
-DataMiner.logger = Logger.new(nil)
 
 require 'sniff'
-Sniff.init File.join(File.dirname(__FILE__), '..', '..'), :earth => :locality, :cucumber => true, :logger => 'log/test_log.txt'
+Sniff.init File.join(File.dirname(__FILE__), '..', '..'),
+  # :adapter => 'mysql2',
+  # :database => 'test_flight',
+  # :username => 'root',
+  # :password => 'password',
+  :earth => :locality,
+  :cucumber => true,
+  :logger => 'log/test_log.txt'
