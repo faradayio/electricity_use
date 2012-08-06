@@ -2,6 +2,8 @@
 # See LICENSE for details.
 # Contact Brighter Planet for dual-license arrangements.
 
+require 'earth/locality/country'
+
 ## Electricity use model
 # This model is used by the [Brighter Planet](http://brighterplanet.com) [CM1 web service](http://impact.brighterplanet.com) to calculate the impacts of electricity consumption, such as energy use, greenhouse gas emissions, and water use.
 

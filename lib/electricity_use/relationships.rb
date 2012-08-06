@@ -1,3 +1,7 @@
+require 'earth/locality/country'
+require 'earth/locality/state'
+require 'earth/locality/zip_code'
+
 module BrighterPlanet
   module ElectricityUse
     module Relationships
