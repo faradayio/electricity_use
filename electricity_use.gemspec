@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   
   s.add_runtime_dependency 'earth',     '~>0.12.0'
   s.add_dependency 'emitter', '~> 1.0.0'
-  s.add_development_dependency 'sniff', '~>0.11.11'
+  s.add_development_dependency 'sniff', '~> 1.0.0'
   s.add_development_dependency 'sqlite3'
 end
