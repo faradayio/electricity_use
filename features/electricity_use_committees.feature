@@ -71,7 +71,7 @@ Feature: Electricity Use Committee Calculations
     When the "date" committee reports
     And the "carbon" committee reports
     Then the committee should have used quorum "from date, emission factor, loss factor and energy"
-    And the conclusion of the committee should be "2500.0"
+    And the conclusion of the committee should be "<carbon>"
     Examples:
       | date       | timeframe             | energy | ef  | lf  | carbon |
       | 2010-07-15 | 2010-01-01/2011-01-01 | 3600   | 2.0 | 0.2 | 2500.0 |
